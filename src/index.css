@@ -89,15 +89,14 @@ h1 span {
 
 .button-area {
   position: relative;
-  width: 100%;
-  min-height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  width: min(520px, 100%);
+  height: 140px;
+  margin: 0 auto;
+  display: block;
+  --yes-x: 35%;
 
   /* keep No from ever appearing outside this area */
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 /* Remove duplicated/contradicting .btn.no blocks and keep a single one */
@@ -105,7 +104,6 @@ h1 span {
   position: absolute;
   left: 0;
   top: 0;
-
   background: var(--no);
   color: #2f3a4a;
   box-shadow: 0 5px 9px rgba(50, 60, 80, 0.18);
@@ -113,6 +111,12 @@ h1 span {
   /* smooth movement */
   transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
+
+  touch-action: none; /* prevents scroll/pinch handling on this target */
+}
+
+/* After measuring: allow transform-based movement */
+.btn.no.ready {
 }
 
 /* IMPORTANT: don't override transform on hover, it cancels your translate(x,y) */
@@ -130,7 +134,7 @@ h1 span {
   border-radius: 999px;
   cursor: pointer;
   width: fit-content;
-  margin: 40px;
+  margin: 0;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
@@ -140,7 +144,10 @@ h1 span {
 }
 
 .btn.yes {
-  position: relative; /* needed for the glitter overlay */
+  position: absolute; /* needed for the glitter overlay */
+  left: var(--yes-x);
+  top: 50%;
+  transform: translate(-50%, -50%) scale(var(--yes-scale, 1));
   overflow: hidden; /* clip glitter inside the pill */
   background: linear-gradient(135deg, var(--yes), var(--yes-dark));
   color: #fff;
@@ -148,7 +155,7 @@ h1 span {
 }
 
 .btn.yes.big {
-  transform: scale(2);
+  --yes-scale: 2;
   /* z-index: 2; */
 }
 
@@ -202,15 +209,13 @@ h1 span {
   box-shadow: 0 18px 30px rgba(60, 40, 60, 0.2);
 }
 
-@keyframes floatIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.celebrate-gif {
+  width: min(520px, 100%);
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 12px auto 0;
+  object-fit: contain;
 }
 
 @media (max-width: 480px) {
@@ -219,11 +224,17 @@ h1 span {
   }
 
   .button-area {
-    height: 90px;
+    height: 140px;
+    --yes-x: 33%;
   }
 
   .btn.yes.big {
-    transform: scale(1.6);
+    --yes-scale: 1.6;
+  }
+
+  .celebrate-gif {
+    width: 100%;
+    max-width: 320px;
   }
 }
 
@@ -236,5 +247,16 @@ h1 span {
   .btn.yes.big::after {
     animation: none;
     opacity: 0.35;
+  }
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

@@ -1,23 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 
 // const celebrationGif = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
+// const celebrationGif =
+//   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjNiaW5icXAzcWVrOWx1emxoZHY3and2c3psdXc1OXh5Y3FxZnQzcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/20NDgRLTSWRuwOQmUo/giphy.gif";
 const celebrationGif =
-  "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjNiaW5icXAzcWVrOWx1emxoZHY3and2c3psdXc1OXh5Y3FxZnQzcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/20NDgRLTSWRuwOQmUo/giphy.gif";
+  "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHI1azF5Mm41ZG1oOTg1aW5pczF4a3I5ejN2aDRuYWpocG5sNXN3aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IYf307vRja6e4/giphy.gif";
 
 export default function App() {
   const [accepted, setAccepted] = useState(false);
   const [yesBig, setYesBig] = useState(false);
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
+  const [noReady, setNoReady] = useState(false); // NEW
   const areaRef = useRef(null);
   const noRef = useRef(null);
   const yesRef = useRef(null);
 
   useEffect(() => {
-    if (!areaRef.current || !noRef.current) return;
+    if (!areaRef.current || !noRef.current || !yesRef.current) return;
+
     const area = areaRef.current.getBoundingClientRect();
     const no = noRef.current.getBoundingClientRect();
-    const x = Math.max(0, area.width - no.width);
-    setNoPosition({ x: 470, y: 20 });
+    const maxX = Math.max(0, area.width - no.width);
+    const maxY = Math.max(0, area.height - no.height);
+
+    // Place "No" near the right side, centered vertically
+    const x = Math.round(maxX * 0.65);
+    const y = Math.round(maxY * 0.5);
+
+    setNoPosition({ x, y });
+    setNoReady(true); // NEW: after this, we can safely switch to absolute+translate
   }, []);
 
   const moveNoButton = () => {
@@ -123,28 +134,22 @@ export default function App() {
 
               <button
                 ref={noRef}
-                className="btn no"
-                style={{
-                  transform: `translate(${noPosition.x}px, ${noPosition.y}px)`,
-                }}
+                className={`btn no ${noReady ? "ready" : ""}`}
+                style={noReady ? { transform: `translate(${noPosition.x}px, ${noPosition.y}px)` } : undefined}
                 onPointerEnter={moveNoButton}
                 onPointerDown={(e) => {
                   e.preventDefault();
                   moveNoButton();
                 }}
                 onFocus={moveNoButton}
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  moveNoButton();
-                }}
               >
                 No
               </button>
             </div>
           ) : (
             <div className="celebrate">
-              <div className="yay">YAY!</div>
-              <img src={celebrationGif} alt="Celebration" />
+              <div className="yay">YAY! 🎉</div>
+              <img className="celebrate-gif" src={celebrationGif} alt="Celebration" />
             </div>
           )}
         </div>
