@@ -1,0 +1,240 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Quicksand:wght@500;600&display=swap");
+
+:root {
+  color-scheme: light;
+  --bg: #fde8ef;
+  --bg-deep: #f8c5d4;
+  --card: #fff9fb;
+  --ink: #2d1f1f;
+  --muted: #7a6a6a;
+  --yes: #ff3a78;
+  --yes-dark: #e92462;
+  --no: #d5d8df;
+  --shadow: 0 20px 45px rgba(182, 98, 122, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Quicksand", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 40%),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent 30%), radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.5), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--bg-deep));
+  display: grid;
+  place-items: center;
+  padding: 32px 18px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.35) 0 6px, transparent 7px),
+    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.35) 0 6px, transparent 7px),
+    radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.35) 0 6px, transparent 7px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.page {
+  width: min(720px, 100%);
+}
+
+.card {
+  position: relative;
+  background: var(--card);
+  border-radius: 28px;
+  padding: 32px 32px 28px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  display: grid;
+  gap: 18px;
+  animation: floatIn 600ms ease-out;
+}
+
+.icon {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  filter: drop-shadow(0 8px 12px rgba(228, 145, 110, 0.35));
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+h1 {
+  font-family: "Fraunces", serif;
+  font-size: clamp(24px, 4vw, 32px);
+  margin: 0;
+  line-height: 1.25;
+}
+
+h1 span {
+  color: var(--yes);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 150px;
+}
+
+.button-area {
+  position: relative;
+  width: 100%;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  /* keep No from ever appearing outside this area */
+  /* overflow: hidden; */
+}
+
+/* Remove duplicated/contradicting .btn.no blocks and keep a single one */
+.btn.no {
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  background: var(--no);
+  color: #2f3a4a;
+  box-shadow: 0 5px 9px rgba(50, 60, 80, 0.18);
+
+  /* smooth movement */
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+/* IMPORTANT: don't override transform on hover, it cancels your translate(x,y) */
+.btn.no:hover {
+  /* keep your lift effect without overwriting transform translate(...) */
+  filter: brightness(0.98);
+}
+
+.btn {
+  border: none;
+  font-family: "Quicksand", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  width: fit-content;
+  margin: 40px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.btn:focus-visible {
+  outline: 3px solid rgba(255, 58, 120, 0.4);
+  outline-offset: 4px;
+}
+
+.btn.yes {
+  position: relative; /* needed for the glitter overlay */
+  overflow: hidden; /* clip glitter inside the pill */
+  background: linear-gradient(135deg, var(--yes), var(--yes-dark));
+  color: #fff;
+  box-shadow: 0 5px 9px rgba(255, 58, 120, 0.35);
+}
+
+.btn.yes.big {
+  transform: scale(2);
+  /* z-index: 2; */
+}
+
+/* Glitter/shimmer overlay (only when big) */
+.btn.yes.big::after {
+  content: "";
+  position: absolute;
+  inset: -80% -40%;
+  pointer-events: none;
+  opacity: 0.9;
+  mix-blend-mode: screen;
+
+  /* GOLD glitter dots + a subtle vertical gold sheen */
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.95) 0 0.5px, transparent 1px) 0 0 / 16px 16px,
+    radial-gradient(circle, rgba(255, 193, 7, 0.8) 0 0.3px, transparent 0.6px) 8px 10px / 18px 18px;
+  /* linear-gradient(180deg, transparent 0%, rgba(255, 215, 0, 0) 35%, rgba(255, 215, 0, 0.55) 50%, rgba(255, 215, 0, 0) 65%, transparent 100%); */
+
+  transform: translateY(-45%) rotate(8deg);
+  animation: yesGlitter 1400ms linear infinite;
+}
+
+@keyframes yesGlitter {
+  0% {
+    transform: translateY(-45%) rotate(8deg);
+  }
+  100% {
+    transform: translateY(45%) rotate(8deg);
+  }
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.celebrate {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+}
+
+.yay {
+  font-family: "Fraunces", serif;
+  font-size: 36px;
+  color: var(--yes);
+}
+
+.celebrate img {
+  border-radius: 18px;
+  box-shadow: 0 18px 30px rgba(60, 40, 60, 0.2);
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 22px 24px;
+  }
+
+  .button-area {
+    height: 90px;
+  }
+
+  .btn.yes.big {
+    transform: scale(1.6);
+  }
+}
+
+/* Optional: respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn.no {
+    transition: none;
+  }
+
+  .btn.yes.big::after {
+    animation: none;
+    opacity: 0.35;
+  }
+}
